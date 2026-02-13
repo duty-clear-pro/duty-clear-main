@@ -3,7 +3,7 @@ import streamlit as st
 # 1. Configuração TradeMind
 st.set_page_config(page_title="TradeMind | Intelligence", layout="wide")
 
-# 2. CSS - Visual de Terminal de Elite
+# 2. CSS - Estética e Rodapé Legal
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
@@ -13,7 +13,7 @@ st.markdown("""
     /* Sidebar Dark */
     [data-testid="stSidebar"] { background-color: #020617 !important; }
     
-    /* Cards e Banners */
+    /* Banner e Cards */
     .hero-banner {
         background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
         padding: 40px; border-radius: 20px; color: white; margin-bottom: 20px;
@@ -23,14 +23,16 @@ st.markdown("""
         background: white; padding: 20px; border-radius: 15px;
         border: 1px solid #E2E8F0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
-    .about-section {
-        background: white; padding: 40px; border-radius: 20px;
-        border: 1px solid #E2E8F0; line-height: 1.6;
+    
+    /* RODAPÉ LEGAL - BLINDAGEM JURÍDICA */
+    .legal-footer {
+        font-size: 11px; color: #94A3B8; text-align: center;
+        padding: 20px; border-top: 1px solid #E2E8F0; margin-top: 50px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 3. Lógica de Navegação
+# Lógica de Navegação
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'aba' not in st.session_state: st.session_state.aba = "Home"
 if 'chat_history' not in st.session_state: st.session_state.chat_history = []
@@ -53,7 +55,7 @@ if not st.session_state.auth:
             else:
                 st.error("Credenciais incorretas.")
 
-# --- TELA INTERNA (ABAS) ---
+# --- TELA INTERNA ---
 else:
     with st.sidebar:
         st.markdown("<h2 style='color:white; text-align:center;'>TRADEMIND</h2>", unsafe_allow_html=True)
@@ -64,44 +66,26 @@ else:
         st.markdown("<br><hr style='opacity:0.2;'><br>", unsafe_allow_html=True)
         if st.button("🚪 Sair", use_container_width=True): st.session_state.auth = False; st.rerun()
 
-    # CONTEÚDO DAS ABAS
+    # HOME
     if st.session_state.aba == "Home":
-        st.markdown("<div class='hero-banner'><h1>Painel de Controle</h1><p>Monitoramento Global em tempo real.</p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='hero-banner'><h1>Painel de Controle</h1><p>Monitoramento Global Ativo.</p></div>", unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         with c1: st.markdown("<div class='stat-card'><h4>Dólar</h4><h2>R$ 5,12</h2></div>", unsafe_allow_html=True)
         with c2: st.markdown("<div class='stat-card'><h4>Euro</h4><h2>R$ 5,48</h2></div>", unsafe_allow_html=True)
-        with c3: st.markdown("<div class='stat-card'><h4>Itens Base</h4><h2>15.160</h2></div>", unsafe_allow_html=True)
+        with c3: st.markdown("<div class='stat-card'><h4>Compliance</h4><h2>Auditado</h2></div>", unsafe_allow_html=True)
 
+    # QUEM SOMOS + DISCLAIMER
     elif st.session_state.aba == "About":
-        st.markdown("<div class='about-section'>", unsafe_allow_html=True)
         st.header("Sobre o TradeMind")
+        st.info("**Nota de Isenção de Responsabilidade:** Os valores, alíquotas e cálculos apresentados são baseados em dados históricos e estimativas referenciais. O TradeMind não substitui a conferência aduaneira oficial nem o parecer de um despachante habilitado.")
         st.write("""
-        O **TradeMind** nasceu para preencher a lacuna entre a intenção de compra/venda e a execução aduaneira. 
-        Enquanto os ERPs tradicionais focam no registro do que já aconteceu, nós focamos na estratégia do que **vai acontecer**.
-        
-        **Nossos Pilares:**
-        * **Segurança Jurídica:** Classificação fiscal blindada.
-        * **Lucratividade:** Simulação real de custos (Land Cost).
-        * **Inteligência:** IA treinada em regulamentações de comércio exterior.
+        O **TradeMind** é uma ferramenta de inteligência de dados. Trabalhamos com **valores baseados em médias de mercado e legislações vigentes**, servindo como um guia de viabilidade. 
+        A responsabilidade final pela classificação e declaração de mercadorias é exclusiva do usuário/importador.
         """)
-        st.markdown("</div>", unsafe_allow_html=True)
 
+    # IA COM AVISO LEGAL
     elif st.session_state.aba == "AI":
         st.header("🤖 Assistente IA TradeMind")
-        # Exibe histórico
-        for msg in st.session_state.chat_history:
-            with st.chat_message(msg["role"]): st.markdown(msg["content"])
+        st.caption("⚠️ As respostas da IA são baseadas em modelos de linguagem e bases de dados estatísticas. Sempre valide as informações com a legislação oficial (Siscomex/TEC).")
         
-        if prompt := st.chat_input("Pergunte sobre impostos, NCM ou logística..."):
-            st.session_state.chat_history.append({"role": "user", "content": prompt})
-            with st.chat_message("user"): st.markdown(prompt)
-            
-            # Lógica da Resposta
-            with st.chat_message("assistant"):
-                resposta = f"Analisando sua dúvida sobre '{prompt}'... Com base na TEC (Tarifa Externa Comum), recomendamos verificar se há necessidade de Licença de Importação não-automática."
-                st.markdown(resposta)
-                st.session_state.chat_history.append({"role": "assistant", "content": resposta})
-
-    elif st.session_state.aba == "NCM":
-        st.header("🔍 Consulta NCM")
-        st.text_input("Digite o código ou descrição...")
+        for msg in st.session_state.chat_history:
