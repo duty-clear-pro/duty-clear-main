@@ -1,52 +1,73 @@
 import streamlit as st
 
-# 1. Configuração de Interface Profissional
-st.set_page_config(page_title="UAU Logística | ERP", layout="wide")
+# 1. Configuração de Página
+st.set_page_config(page_title="UAU Logística", layout="wide")
+logo_url = "https://cdn-icons-png.flaticon.com/512/4370/4370714.png"
 
-# 2. CSS Avançado - Menu em Barra Lateral (Sem bolinhas)
+# 2. CSS - Estilo Clean e Minimalista (Software de Luxo)
 st.markdown("""
     <style>
-    /* Estilo Landing Page Premium */
-    .stApp { background-color: #002B24; color: #FFFFFF; }
+    /* Fundo Claro e Moderno */
+    .stApp {
+        background-color: #F8F9FB;
+        color: #2D3436;
+    }
     
-    /* SIDEBAR: Branca com botões de bloco */
+    /* Sidebar Clean */
     [data-testid="stSidebar"] {
-        background-color: #ffffff !important;
-        border-right: 1px solid #e0e0e0;
+        background-color: #FFFFFF !important;
+        border-right: 1px solid #E1E8ED;
     }
     
-    /* Customização dos Botões do Menu Lateral */
-    .sidebar-btn {
-        display: block;
-        width: 100%;
-        padding: 15px;
-        margin-bottom: 5px;
-        background-color: #f8f9fa;
+    /* Títulos da Página Inicial */
+    .main-title {
+        font-size: 48px;
+        font-weight: 800;
         color: #1A2B48;
-        border: none;
-        border-radius: 4px;
+        letter-spacing: -1px;
+    }
+    .sub-title {
+        font-size: 18px;
+        color: #B8964E;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Botões da Barra Lateral (Barras Reais) */
+    div.stButton > button {
+        width: 100%;
+        background-color: #FFFFFF !important;
+        color: #1A2B48 !important;
+        height: 50px;
+        border: 1px solid #E1E8ED !important;
+        border-radius: 6px;
+        font-weight: 600;
         text-align: left;
-        font-weight: bold;
-        text-decoration: none;
+        padding-left: 20px;
         transition: 0.2s;
-        cursor: pointer;
+        margin-bottom: 10px;
     }
-    .sidebar-btn:hover {
-        background-color: #28A745;
-        color: white;
+    div.stButton > button:hover {
+        background-color: #1A2B48 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #1A2B48 !important;
     }
-    
-    /* Títulos e Identidade */
-    .main-title { font-size: 52px; font-weight: 900; color: #FFFFFF; margin-bottom: 0px; }
-    .sub-title { font-size: 18px; color: #A0C4B8; margin-bottom: 40px; }
-    
-    /* Cards do Interior */
-    .card-boas-vindas {
+
+    /* Caixa de Boas-vindas */
+    .welcome-card {
         background-color: #FFFFFF;
-        padding: 30px;
-        border-radius: 10px;
-        color: #333;
-        box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0px 10px 30px rgba(0,0,0,0.03);
+        border: 1px solid #E1E8ED;
+        max-width: 800px;
+        margin: auto;
+    }
+
+    /* Input de Login */
+    input {
+        border-radius: 6px !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -58,59 +79,60 @@ if 'pagina' not in st.session_state:
     st.session_state['pagina'] = "Boas-vindas"
 
 if not st.session_state['autenticado']:
-    # --- TELA DE ENTRADA ---
-    col_text, _, col_login = st.columns([1.5, 0.2, 1])
-    with col_text:
-        st.markdown("<h1 class='main-title'>UAU LOGÍSTICA</h1>", unsafe_allow_html=True)
-        st.markdown("<p class='sub-title'>Sistema de Inteligência Operacional e Tributária.</p>", unsafe_allow_html=True)
-        st.markdown("""
-            <div style='background:white; padding:20px; border-radius:8px; color:#333; border-left:8px solid #28A745;'>
-                <b>Gestão de Performance</b><br>Controle total de fretes, rotas e classificação fiscal.
-            </div>
-        """, unsafe_allow_html=True)
-    with col_login:
-        st.markdown("<br><br><br>", unsafe_allow_html=True)
-        with st.form("login"):
+    # --- TELA DE ENTRADA CLEAN ---
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1, 2, 1])
+    
+    with c2:
+        st.markdown("<p class='sub-title' style='text-align:center;'>Plataforma Inteligente</p>", unsafe_allow_html=True)
+        st.markdown("<h1 class='main-title' style='text-align:center;'>UAU LOGÍSTICA</h1>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        with st.container():
+            st.markdown('<div style="background:white; padding:40px; border-radius:15px; border:1px solid #E1E8ED;">', unsafe_allow_html=True)
+            st.markdown("<h3 style='color:#1A2B48; margin-bottom:20px;'>Acesso ao Sistema</h3>", unsafe_allow_html=True)
             u = st.text_input("Usuário")
             p = st.text_input("Senha", type="password")
-            if st.form_submit_button("ACESSAR SERVIDOR"):
+            if st.button("AUTENTICAR"):
                 if u == "gestor.vip" and p == "UAU2026":
                     st.session_state['autenticado'] = True
                     st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+
 else:
-    # --- INTERIOR COM MENU EM BARRA ---
+    # --- ÁREA INTERNA COM MENU LATERAL EM BARRA ---
     with st.sidebar:
-        st.markdown("<h2 style='color:#1A2B48;'>UAU LOGÍSTICA</h2>", unsafe_allow_html=True)
+        st.image(logo_url, width=60)
+        st.markdown("<h2 style='color:#1A2B48;'>UAU</h2>", unsafe_allow_html=True)
         st.divider()
         
-        # Simulando botões de menu (Barra Lateral Real)
-        if st.button("Painel de Boas-vindas", use_container_width=True):
-            st.session_state['pagina'] = "Boas-vindas"
-        if st.button("Consulta NCM", use_container_width=True):
-            st.session_state['pagina'] = "NCM"
-        if st.button("Rotas e Mapas", use_container_width=True):
-            st.session_state['pagina'] = "Mapas"
-        if st.button("Gestão de Fretes", use_container_width=True):
-            st.session_state['pagina'] = "Fretes"
+        # Menu em botões largos (Barras)
+        if st.button("Painel de Boas-vindas"): st.session_state['pagina'] = "Boas-vindas"; st.rerun()
+        if st.button("Consulta NCM"): st.session_state['pagina'] = "NCM"; st.rerun()
+        if st.button("Rotas e Mapas"): st.session_state['pagina'] = "Mapas"; st.rerun()
+        if st.button("Financeiro"): st.session_state['pagina'] = "Financeiro"; st.rerun()
         
-        st.markdown("<br><br>", unsafe_allow_html=True)
-        if st.button("Sair", type="primary", use_container_width=True):
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
+        if st.button("SAIR"):
             st.session_state['autenticado'] = False
             st.rerun()
 
-    # Conteúdo Dinâmico
-    st.markdown(f"<h2 style='color:white;'>{st.session_state['pagina']}</h2>", unsafe_allow_html=True)
-    
+    # Conteúdo
     if st.session_state['pagina'] == "Boas-vindas":
-        st.markdown("""
-            <div class='card-boas-vindas'>
-                <h3>Olá, Igor!</h3>
-                <p>O sistema UAU Logística está operando normalmente. Selecione uma opção no menu à esquerda para iniciar.</p>
-                <hr>
-                <div style='display:flex; justify-content:space-between;'>
-                    <div><b>Base NCM:</b> 15.160 itens</div>
-                    <div><b>Status Google Maps:</b> Conectado</div>
-                    <div><b>Sessão:</b> Administrador</div>
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown(f"""
+            <div class='welcome-card'>
+                <h1 style='color:#1A2B48;'>Olá, Igor.</h1>
+                <p style='color:#636E72; font-size:18px;'>Bem-vindo ao centro de comando da <b>UAU Logística</b>.</p>
+                <hr style='border: 0.5px solid #E1E8ED;'>
+                <p>Selecione uma das operações na barra lateral para começar a gerenciar suas rotas e tributos.</p>
+                <div style='display:flex; gap:20px; margin-top:30px;'>
+                    <div style='background:#F8F9FB; padding:15px; border-radius:8px; flex:1;'>
+                        <b>NCM</b><br>15.160 itens prontos.
+                    </div>
+                    <div style='background:#F8F9FB; padding:15px; border-radius:8px; flex:1;'>
+                        <b>MAPAS</b><br>Google API Ativa.
+                    </div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
