@@ -26,7 +26,7 @@ st.markdown("""
         margin-bottom: 20px;
     }
     .sidebar-brand h2 { font-weight: 900; letter-spacing: -1px; margin:0; }
-    .sidebar-brand p { color: #38BDF8; font-size: 12px; font-weight: bold; margin:0; }
+    .sidebar-brand p { color: #38BDF8; font-size: 11px; font-weight: bold; margin:0; text-transform: uppercase; }
 
     /* Botões de Navegação Estilo 'Tabs' */
     div.stButton > button {
@@ -87,15 +87,25 @@ else:
         st.markdown("""
             <div class='sidebar-brand'>
                 <h2>UAU LOGÍSTICA</h2>
-                <p>INTELLIGENCE & PERFORMANCE</p>
+                <p>Intelligence & Performance</p>
             </div>
         """, unsafe_allow_html=True)
         
-        if st.button("Página Inicial"): st.session_state['pagina'] = "Boas-vindas"; st.rerun()
-        if st.button("Consulta NCM"): st.session_state['pagina'] = "NCM"; st.rerun()
-        if st.button("Simulador de Rotas"): st.session_state['pagina'] = "Mapas"; st.rerun()
-        if st.button("Cálculo de Frete"): st.session_state['pagina'] = "Financeiro"; st.rerun()
-        if st.button("Quem Somos"): st.session_state['pagina'] = "Quem Somos"; st.rerun()
+        if st.button("Página Inicial"): 
+            st.session_state['pagina'] = "Boas-vindas"
+            st.rerun()
+        if st.button("Consulta NCM"): 
+            st.session_state['pagina'] = "NCM"
+            st.rerun()
+        if st.button("Simulador de Rotas"): 
+            st.session_state['pagina'] = "Mapas"
+            st.rerun()
+        if st.button("Cálculo de Frete"): 
+            st.session_state['pagina'] = "Financeiro"
+            st.rerun()
+        if st.button("Quem Somos"): 
+            st.session_state['pagina'] = "Quem Somos"
+            st.rerun()
         
         st.markdown("<br><br><br>", unsafe_allow_html=True)
         if st.button("ENCERRAR SESSÃO"):
@@ -128,4 +138,9 @@ else:
                 </p>
                 <br>
                 <h3>Nossa Visão</h3>
-                <p style='color:#475569;'>Ser a
+                <p style='color:#475569;'>Ser a principal plataforma de apoio à decisão para operações logísticas que buscam rentabilidade e segurança jurídica.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    elif st.session_state['pagina'] == "NCM":
+        st.markdown("<div class='content-card'><h1 class='section-title'>Consulta NCM</h1><div class='accent-bar'></div><p>Módulo em desenvolvimento.</p></div>", unsafe_allow_html=True)
