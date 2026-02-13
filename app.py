@@ -1,125 +1,101 @@
 import streamlit as st
+import pandas as pd
 
-# 1. Configurações de Elite
+# 1. Configurações e Branding
 st.set_page_config(page_title="UAU Logística", page_icon="⚖️", layout="wide")
+logo_url = "https://cdn-icons-png.flaticon.com/512/4370/4370714.png"
 
-# Link da Logo (Substitua pelo seu link se tiver um específico)
-logo_url = "https://cdn-icons-png.flaticon.com/512/4370/4370714.png" 
-
-# 2. Estilo Visual (Branding UAU)
+# 2. Estilo Visual Organizado
 st.markdown("""
     <style>
     .stApp { background-color: #ffffff; }
-    .login-box {
-        background-color: #1A2B48;
-        padding: 40px;
-        border-radius: 15px;
-        color: white;
-        box-shadow: 0px 10px 25px rgba(0,0,0,0.3);
+    .stTabs [data-baseweb="tab-list"] { gap: 24px; }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        white-space: pre-wrap;
+        background-color: #f0f2f6;
+        border-radius: 5px 5px 0px 0px;
+        gap: 1px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
-    .feature-item {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #B8964E;
-        margin-bottom: 15px;
-        color: #1A2B48;
-    }
-    .title-main { color: #1A2B48; font-weight: 900; font-size: 48px; margin-bottom: 0px; line-height: 1;}
-    .slogan-main { color: #B8964E; font-size: 20px; font-style: italic; margin-bottom: 30px; }
-    .footer-text { font-size: 12px; color: #666; text-align: center; margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; }
+    .stTabs [aria-selected="true"] { background-color: #1A2B48 !important; color: white !important; }
+    .title-uau { color: #1A2B48; font-weight: 900; margin-bottom: 0px; }
+    .footer { font-size: 12px; color: #666; text-align: center; margin-top: 50px; border-top: 1px solid #eee; padding: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
-# 3. Gerenciamento de Acesso
+# 3. Trava de Segurança
 if 'autenticado' not in st.session_state:
     st.session_state['autenticado'] = False
 
 if not st.session_state['autenticado']:
-    # --- TELA DE APRESENTAÇÃO COM LOGO ---
-    col_info, _, col_login = st.columns([1.2, 0.2, 1])
-    
-    with col_info:
-        st.image(logo_url, width=80) # LOGO AQUI
-        st.markdown("<h1 class='title-main'>UAU LOGÍSTICA</h1>", unsafe_allow_html=True)
-        st.markdown("<p class='slogan-main'>A precisão que o seu lucro exige.</p>", unsafe_allow_html=True)
-        
-        st.markdown("### Inteligência para Gestão de Fretes")
-        st.markdown("""
-        <div class="feature-item">
-            <b>📊 Simulador de Margem Líquida</b><br>
-            Cálculos instantâneos de lucratividade por carga.
-        </div>
-        <div class="feature-item">
-            <b>🔍 Base Referencial NCM</b><br>
-            Consulta rápida de tributação e classificação.
-        </div>
-        <div class="feature-item">
-            <b>📄 Relatórios Executivos</b><br>
-            Geração de dados para suporte à decisão rápida.
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_login:
-        st.markdown("<br><br><br>", unsafe_allow_html=True)
-        st.markdown('<div class="login-box">', unsafe_allow_html=True)
-        st.subheader("🔑 Acesso ao Servidor")
-        user = st.text_input("Usuário VIP")
-        password = st.text_input("Chave de Segurança", type="password")
-        if st.button("AUTENTICAR"):
-            if user == "gestor.vip" and password == "UAU2026":
-                st.session_state['autenticado'] = True
-                st.rerun()
-            else:
-                st.error("Credenciais incorretas.")
-        st.markdown('</div>', unsafe_allow_html=True)
-
+    # Tela de Login (A mesma que você aprovou)
+    col1, _, col2 = st.columns([1.2, 0.2, 1])
+    with col1:
+        st.image(logo_url, width=70)
+        st.markdown("<h1 class='title-uau'>UAU LOGÍSTICA</h1>", unsafe_allow_html=True)
+        st.info("Sistema de Inteligência Operacional e Tributária.")
+    with col2:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        with st.form("login"):
+            u = st.text_input("Usuário")
+            p = st.text_input("Senha", type="password")
+            if st.form_submit_button("ACESSAR"):
+                if u == "gestor.vip" and p == "UAU2026":
+                    st.session_state['autenticado'] = True
+                    st.rerun()
 else:
-    # --- DASHBOARD COM LOGO NO MENU ---
-    st.sidebar.image(logo_url, width=100) # LOGO NO MENU
-    st.sidebar.title("UAU Logística")
-    st.sidebar.write(f"Usuário: **Gestor VIP**")
-    
-    if st.sidebar.button("Sair do Sistema"):
-        st.session_state['autenticado'] = False
-        st.rerun()
-
-    st.markdown(f"<h1 style='color: #1A2B48;'>Dashboard de Operações</h1>", unsafe_allow_html=True)
+    # --- DASHBOARD ORGANIZADO POR SEÇÕES ---
+    st.image(logo_url, width=60)
+    st.markdown("<h1 class='title-uau'>Painel de Controle</h1>", unsafe_allow_html=True)
     st.write("---")
 
-    col1, col2 = st.columns([2, 1])
+    # CRIAÇÃO DAS SEÇÕES (TABS)
+    aba_ncm, aba_logistica, aba_frete = st.tabs(["🔍 CONSULTA NCM", "📦 LOGÍSTICA", "💰 CÁLCULO DE FRETE"])
 
-    with col1:
+    # --- SEÇÃO 1: NCM ---
+    with aba_ncm:
+        st.subheader("Base de Inteligência Tributária")
+        st.write("Consulte alíquotas e classificações fiscais.")
+        busca_ncm = st.text_input("Digite o código NCM ou nome do produto", placeholder="Ex: 1201.90.00")
+        
+        # Simulação de tabela (Aqui entra sua planilha depois)
+        st.info("Resultado da consulta aparecerá abaixo conforme a base de dados.")
+        st.dataframe(pd.DataFrame({'NCM': ['1201.90.00'], 'Produto': ['Soja'], 'IPI': ['0%'], 'ICMS': ['12%']}))
+
+    # --- SEÇÃO 2: LOGÍSTICA ---
+    with aba_logistica:
+        st.subheader("Planejamento de Carga")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.selectbox("Tipo de Veículo", ["Bitrem", "Rodotrem", "Vanderleia", "Truck"])
+            st.text_input("Local de Origem")
+        with col_b:
+            st.number_input("Peso Total (Toneladas)", min_value=0.0)
+            st.text_input("Destino Final")
+        st.button("Salvar Planejamento")
+
+    # --- SEÇÃO 3: FRETE ---
+    with aba_frete:
+        st.subheader("Simulador de Margem Líquida")
         with st.container(border=True):
-            st.subheader("🚀 Simulador de Carga")
-            produto = st.text_input("Produto ou NCM", placeholder="Ex: Milho, Soja, 1201.90.00")
+            v_carga = st.number_input("Valor da Carga (R$)", key="frete_carga")
+            v_frete = st.number_input("Custo do Frete (R$)", key="frete_valor")
             
-            c1, c2 = st.columns(2)
-            v_carga = c1.number_input("Valor da Carga (R$)", min_value=0.0)
-            v_frete = c2.number_input("Custo do Frete (R$)", min_value=0.0)
-            
-            if st.button("CALCULAR MARGEM LÍQUIDA"):
-                imposto = v_carga * 0.12
-                lucro = v_carga - v_frete - imposto
-                
-                st.markdown(f"""
-                    <div style='background-color: #1A2B48; padding: 20px; border-radius: 10px; text-align: center; color: white;'>
-                        <h3 style='margin:0;'>Lucro Líquido Estimado</h3>
-                        <h1 style='color: #B8964E; margin:0;'>R$ {lucro:,.2f}</h1>
-                    </div>
-                """, unsafe_allow_html=True)
+            if st.button("CALCULAR AGORA"):
+                lucro = v_carga - v_frete - (v_carga * 0.12)
+                st.metric("Lucro Líquido Estimado", f"R$ {lucro:,.2f}", delta=f"{(lucro/v_carga)*100:.1f}% de Margem")
+                st.progress(max(0, min(int((lucro/v_carga)*100), 100)) if v_carga > 0 else 0)
 
-    with col2:
-        st.subheader("🛠️ Ações Rápidas")
-        st.button("📄 Baixar PDF do Relatório")
-        st.button("💬 Enviar via WhatsApp")
-        st.divider()
-        st.info("**Nota Técnica:** Alíquotas baseadas em 12% (Referencial).")
-
+    # Rodapé de Proteção
     st.markdown("""
-        <div class='footer-text'>
-            <b>AVISO DE CONSULTA:</b> O UAU LOGÍSTICA é uma ferramenta de consulta baseada em dados referenciais. 
-            A decisão final é de total responsabilidade do gestor.<br>
-            Suporte: <b>suporte@uaulogistica.com</b>
+        <div class='footer'>
+            <b>UAU LOGÍSTICA</b> - Sistema de Apoio à Decisão.<br>
+            <i>Aviso: Dados referenciais. A decisão final é de responsabilidade do gestor.</i>
         </div>
         """, unsafe_allow_html=True)
+
+    if st.sidebar.button("Sair"):
+        st.session_state['autenticado'] = False
+        st.rerun()
