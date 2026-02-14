@@ -1,34 +1,24 @@
 import streamlit as st
-import pandas as pd
 from datetime import datetime
 
-# CONFIG
+# CONFIGURAÇÃO
 st.set_page_config(
     page_title="TradeMind",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ===== CSS PERSONALIZADO =====
+# ===== CSS =====
 st.markdown("""
 <style>
-body {
-    background-color: #F4F6F9;
-}
 [data-testid="stSidebar"] {
     background-color: #0B1F3A;
-}
-.sidebar-title {
-    color: white;
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 30px;
 }
 .card {
     background-color: white;
     padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
 }
 .big-number {
     font-size: 28px;
@@ -37,21 +27,30 @@ body {
 .section-title {
     font-size: 26px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ===== SIDEBAR =====
 with st.sidebar:
-    st.markdown("<div class='sidebar-title'>TRADEMIND</div>", unsafe_allow_html=True)
+    st.markdown("## TRADEMIND")
     menu = st.radio(
         "",
         ["📊 Dashboard", "🔎 Inteligência NCM", "🤖 Assistente IA", "🏢 Quem Somos"]
     )
     st.markdown("---")
-    st.write("© 2026 TradeMind")
+    st.caption("© 2026 TradeMind")
 
 # ===== DASHBOARD =====
 if menu == "📊 Dashboard":
-    st.markdown("<div c
+    st.markdown("<div class='section-title'>Terminal TradeMind</div>", unsafe_allow_html=True)
+    st.write(f"Bem-vindo, Igor • {datetime.now().strftime('%d/%m/%Y')}")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("""
+        <div class='card'>
+            <div>Dólar</div>
+            <div class='big-number'>R
