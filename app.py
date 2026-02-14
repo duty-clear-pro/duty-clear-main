@@ -1,216 +1,126 @@
 import streamlit as st
-import sqlite3
-import hashlib
+import pandas as pd
 
-st.set_page_config(page_title="TradeMind AI", layout="wide")
+# 1. SETUP PREMIUM
+st.set_page_config(page_title="TradeMind | Intelligence", layout="wide")
 
-# ---------------------- ESTILO PREMIUM ----------------------
+# 2. DESIGN LIGHT TECH (SISTEMA RICO)
 st.markdown("""
-<style>
-body {
-    background-color: #0E1117;
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .stApp { background-color: #F8FAFC; }
+    
+    /* Cards com Glassmorphism Light */
+    .card-motor {
+        background: white; padding: 25px; border-radius: 20px;
+        border: 1px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        margin-bottom: 20px;
+    }
+    .badge-dev {
+        background: #FEF3C7; color: #92400E; padding: 4px 12px;
+        border-radius: 10px; font-size: 10px; font-weight: bold;
+    }
+    .stButton > button {
+        background: linear-gradient(90deg, #2563EB, #3B82F6);
+        color: white; border-radius: 12px; border: none; font-weight: 600;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# 3. MOTOR DE DADOS (BASE REAL MOCK)
+ncm_data = {
+    "85171300": {"nome": "Smartphone", "ii": 11.2, "ipi": 15, "pis": 2.1, "cofins": 9.65},
+    "84713012": {"nome": "Notebook", "ii": 0.0, "ipi": 0, "pis": 2.1, "cofins": 9.65},
+    "87032310": {"nome": "Veículo > 1500cm³", "ii": 35.0, "ipi": 25, "pis": 2.1, "cofins": 9.65}
 }
-.block-container {
-    padding-top: 2rem;
-}
-h1, h2, h3, h4 {
-    font-weight: 700;
-}
-.hero-title {
-    font-size: 48px;
-    font-weight: 800;
-    color: white;
-}
-.hero-sub {
-    font-size: 20px;
-    color: #9CA3AF;
-}
-.card {
-    background-color: #161B22;
-    padding: 25px;
-    border-radius: 12px;
-    border: 1px solid #222;
-}
-.metric-card {
-    background: linear-gradient(145deg, #111827, #0f172a);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
-</style>
-""", unsafe_allow_html=True)
 
-# ---------------------- HASH ----------------------
-def gerar_hash(senha):
-    return hashlib.sha256(senha.encode()).hexdigest()
+# 4. LÓGICA DE NAVEGAÇÃO
+if 'auth' not in st.session_state: st.session_state.auth = False
+if 'aba' not in st.session_state: st.session_state.aba = "Dashboard"
 
-# ---------------------- BANCO ----------------------
-conn = sqlite3.connect("trademind.db", check_same_thread=False)
-cursor = conn.cursor()
+# --- TELA DE LOGIN ---
+if not st.session_state.auth:
+    _, col, _ = st.columns([1, 1, 1])
+    with col:
+        st.markdown("<div class='card-motor' style='text-align:center;'>", unsafe_allow_html=True)
+        st.title("TRADEMIND")
+        u = st.text_input("Usuário")
+        p = st.text_input("Senha", type="password")
+        if st.button("ACESSAR TERMINAL"):
+            if u == "admin" and p == "trade2026":
+                st.session_state.auth = True; st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT,
-    email TEXT UNIQUE,
-    senha TEXT,
-    perfil TEXT
-)
-""")
-conn.commit()
-
-cursor.execute("SELECT * FROM usuarios WHERE email = ?", ("admin@trademind.com",))
-if not cursor.fetchone():
-    cursor.execute(
-        "INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)",
-        ("Administrador", "admin@trademind.com", gerar_hash("admin123"), "Administrador")
-    )
-    conn.commit()
-
-# ---------------------- SESSION ----------------------
-if "logado" not in st.session_state:
-    st.session_state.logado = False
-    st.session_state.usuario = None
-    st.session_state.perfil = None
-
-# ---------------------- LOGIN ----------------------
-def login():
-
-    col1, col2 = st.columns([1.6, 1])
-
-    with col1:
-        st.markdown('<div class="hero-title">TradeMind AI</div>', unsafe_allow_html=True)
-        st.markdown('<div class="hero-sub">A Inteligência Tributária da Nova Logística</div>', unsafe_allow_html=True)
-
-        st.markdown("""
-<br>
-
-Transforme classificação NCM em vantagem estratégica.
-
-Antecipe riscos fiscais antes que afetem sua margem.
-Simule impactos tributários em segundos.
-Tenha controle corporativo sobre decisões fiscais.
-
-<br>
-
-<strong>Recursos da Plataforma:</strong>
-
-• Inteligência de Classificação NCM  
-• Simulação Tributária Avançada  
-• Identificação de Risco Fiscal  
-• Gestão Corporativa de Usuários  
-• Ambiente estruturado para Auditoria  
-""", unsafe_allow_html=True)
-
-    with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown("### Acesso Seguro")
-
-        email = st.text_input("E-mail")
-        senha = st.text_input("Senha", type="password")
-
-        if st.button("Entrar na Plataforma"):
-            cursor.execute("SELECT * FROM usuarios WHERE email = ?", (email,))
-            user = cursor.fetchone()
-
-            if user and gerar_hash(senha) == user[3]:
-                st.session_state.logado = True
-                st.session_state.usuario = user[1]
-                st.session_state.perfil = user[4]
-                st.rerun()
-            else:
-                st.error("Credenciais inválidas")
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-# ---------------------- PORTAL ----------------------
-def portal():
-
-    st.sidebar.markdown("## TradeMind AI")
-    st.sidebar.write(f"Usuário: {st.session_state.usuario}")
-    st.sidebar.write(f"Perfil: {st.session_state.perfil}")
-
-    menu = st.sidebar.radio("Menu", [
-        "Dashboard Estratégico",
-        "Inteligência NCM",
-        "Simulação Tributária",
-        "Gestão de Usuários",
-        "Sair"
-    ])
-
-    if menu == "Dashboard Estratégico":
-
-        st.markdown("# Centro de Inteligência Tributária")
-
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.markdown('<div class="metric-card"><h3>142</h3><p>NCMs Analisados</p></div>', unsafe_allow_html=True)
-
-        with col2:
-            st.markdown('<div class="metric-card"><h3>6</h3><p>Alertas Fiscais</p></div>', unsafe_allow_html=True)
-
-        with col3:
-            st.markdown('<div class="metric-card"><h3>Alto</h3><p>Nível de Risco Atual</p></div>', unsafe_allow_html=True)
-
-        st.markdown("""
-<br>
-A TradeMind AI atua como camada estratégica sobre sua operação logística,
-identificando impactos tributários antes que se tornem prejuízo.
-""", unsafe_allow_html=True)
-
-    elif menu == "Inteligência NCM":
-
-        st.markdown("# Análise Inteligente de NCM")
-
-        codigo = st.text_input("Código NCM")
-        descricao = st.text_area("Descrição da Mercadoria")
-
-        if st.button("Executar Análise"):
-            st.success("Análise concluída.")
-            st.write("Possível divergência tributária detectada.")
-            st.write("Recomendação: validar base normativa estadual.")
-
-    elif menu == "Simulação Tributária":
-
-        st.markdown("# Simulador de Impacto Fiscal")
-
-        valor = st.number_input("Valor da Operação")
-        aliquota = st.number_input("Alíquota (%)")
-
-        if st.button("Calcular Impacto"):
-            imposto = valor * (aliquota / 100)
-            st.metric("Impacto Tributário Estimado", f"R$ {imposto:,.2f}")
-
-    elif menu == "Gestão de Usuários":
-
-        if st.session_state.perfil != "Administrador":
-            st.warning("Acesso restrito ao administrador.")
-        else:
-            st.markdown("# Gestão Corporativa")
-
-            nome = st.text_input("Nome")
-            email = st.text_input("Email")
-            senha = st.text_input("Senha", type="password")
-            perfil = st.selectbox("Perfil", ["Administrador", "Analista", "Consulta"])
-
-            if st.button("Criar Usuário"):
-                try:
-                    cursor.execute(
-                        "INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)",
-                        (nome, email, gerar_hash(senha), perfil)
-                    )
-                    conn.commit()
-                    st.success("Usuário criado com sucesso.")
-                except:
-                    st.error("Email já cadastrado.")
-
-    elif menu == "Sair":
-        st.session_state.logado = False
-        st.rerun()
-
-# ---------------------- EXECUÇÃO ----------------------
-if st.session_state.logado:
-    portal()
 else:
-    login()
+    # SIDEBAR CORPORATIVA
+    with st.sidebar:
+        st.markdown("<h2>Duty Clear</h2>", unsafe_allow_html=True)
+        if st.button("📊 Painel Estratégico"): st.session_state.aba = "Dashboard"; st.rerun()
+        if st.button("🔍 Inteligência NCM"): st.session_state.aba = "NCM"; st.rerun()
+        if st.button("💰 Simulador de Custos"): st.session_state.aba = "Simul"; st.rerun()
+        if st.button("🤖 IA Consultora"): st.session_state.aba = "IA"; st.rerun()
+        st.markdown("---")
+        if st.button("🚪 Sair"): st.session_state.auth = False; st.rerun()
+
+    # --- ABA: DASHBOARD ---
+    if st.session_state.aba == "Dashboard":
+        st.markdown("<h1>Dashboard Executivo</h1>", unsafe_allow_html=True)
+        c1, c2, c3 = st.columns(3)
+        with c1: st.markdown("<div class='card-motor'><h4>Score de Risco</h4><h2 style='color:#10B981;'>BAIXO</h2></div>", unsafe_allow_html=True)
+        with c2: st.markdown("<div class='card-motor'><h4>NCMs Auditadas</h4><h2>15.162</h2></div>", unsafe_allow_html=True)
+        with c3: st.markdown("<div class='card-motor'><h4>Economia Potencial</h4><h2 style='color:#2563EB;'>R$ 42.1k</h2></div>", unsafe_allow_html=True)
+
+    # --- ABA: NCM ---
+    elif st.session_state.aba == "NCM":
+        st.markdown("<h1>Inteligência NCM <span class='badge-dev'>MOTOR ATIVO</span></h1>", unsafe_allow_html=True)
+        codigo = st.text_input("Consulte uma NCM (8 dígitos)")
+        if codigo in ncm_data:
+            item = ncm_data[codigo]
+            st.markdown(f"""
+                <div class='card-motor'>
+                    <h3>{item['nome']} (NCM {codigo})</h3>
+                    <p><b>Alíquotas de Importação:</b></p>
+                    <ul>
+                        <li>II: {item['ii']}%</li>
+                        <li>IPI: {item['ipi']}%</li>
+                        <li>PIS/COFINS: {item['pis'] + item['cofins']}%</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+        elif codigo:
+            st.warning("NCM não encontrada na base local. Buscando em banco externo...")
+            st.info("Status: Aguardando integração com API do Governo Federal <span class='badge-dev'>EM DEV</span>", unsafe_allow_html=True)
+
+    # --- ABA: SIMULADOR (O MOTOR REAL) ---
+    elif st.session_state.aba == "Simul":
+        st.markdown("<h1>Simulador de Custo Landed</h1>", unsafe_allow_html=True)
+        with st.form("calc"):
+            col1, col2 = st.columns(2)
+            fob = col1.number_input("Valor FOB (USD)", min_value=0.0)
+            frete = col2.number_input("Frete/Seguro (USD)", min_value=0.0)
+            taxa = st.number_input("Câmbio (R$)", value=5.12)
+            submit = st.form_submit_button("PROCESSAR CÁLCULO TRIBUTÁRIO")
+            
+            if submit:
+                cif = (fob + frete) * taxa
+                ii = cif * 0.14
+                ipi = (cif + ii) * 0.15
+                total = cif + ii + ipi
+                
+                st.markdown("<div class='card-motor'>", unsafe_allow_html=True)
+                st.write(f"**Base de Cálculo (CIF):** R$ {cif:,.2f}")
+                st.write(f"**Imposto de Importação (II):** R$ {ii:,.2f}")
+                st.write(f"**IPI (Estimado):** R$ {ipi:,.2f}")
+                st.markdown(f"### Custo Total Estimado: R$ {total:,.2f}")
+                st.markdown("</div>", unsafe_allow_html=True)
+                st.download_button("GERAR RELATÓRIO DE VIABILIDADE", "Relatorio TradeMind...", file_name="viabilidade.txt")
+
+    # --- ABA: IA ---
+    elif st.session_state.aba == "IA":
+        st.markdown("<h1>Assistente de Legislação <span class='badge-dev'>EM DESENVOLVIMENTO</span></h1>", unsafe_allow_html=True)
+        st.markdown("<div class='card-motor'>Aguardando conexão com banco de dados de legislação federal e API GPT-4.</div>", unsafe_allow_html=True)
+        st.chat_input("Pergunte algo sobre o Regulamento Aduaneiro (Inativo no momento)...")
+
+    # RODAPÉ
+    st.markdown("<br><hr><center><small>TradeMind AI © 2026 - Valores Referenciais. Blindagem Jurídica Ativa.</small></center>", unsafe_allow_html=True)
