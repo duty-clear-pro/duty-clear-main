@@ -123,5 +123,4 @@ Na TradeMind, cada dado é tratado como ativo estratégico — porque no comérc
 
     # RODAPÉ LEGAL (Obrigatório para sua segurança)
     st.markdown("<div style='text-align:center; padding: 40px; color:#94A3B8; font-size:11px; border-top:1px solid #E2E8F0;'>"
-                "TRADEMIND AI | DUTY CLEAR - INFORMAÇÕES MERAMENTE REFERENCIAIS BASEADAS EM DADOS HISTÓRICOS. "
-                "CONSULTE O REGULAMENTO ADUANEIRO VIGENTE.</div>", unsafe_allow_html=True)
+                "As informações disponibilizadas pela TradeMind possuem caráter exclusivamente informativo e de apoio à decisão. Não substituem consultoria jurídica, contábil ou aduaneira. A responsabilidade pelo uso dos dados e pelo cumprimento da legislação vigente é integralmente do usuário..</div>", unsafe_allow_html=True)
