@@ -1,6 +1,6 @@
 import streamlit as st
 import sqlite3
-import bcrypt
+import hashlib
 from datetime import datetime
 
 # ==============================
@@ -11,6 +11,13 @@ st.set_page_config(page_title="TradeMind", layout="wide")
 
 conn = sqlite3.connect("trademind.db", check_same_thread=False)
 cursor = conn.cursor()
+
+# ==============================
+# FUNÇÃO HASH DE SENHA
+# ==============================
+
+def gerar_hash(senha):
+    return hashlib.sha256(senha.encode()).hexdigest()
 
 # ==============================
 # CRIAÇÃO DAS TABELAS
@@ -86,7 +93,7 @@ def criar_empresa_padrao():
 def criar_admin_padrao():
     cursor.execute("SELECT * FROM usuarios")
     if not cursor.fetchone():
-        senha_hash = bcrypt.hashpw("admin123".encode(), bcrypt.gensalt())
+        senha_hash = gerar_hash("admin123")
         cursor.execute("""
         INSERT INTO usuarios (nome, email, senha, perfil, empresa_id, status)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -114,7 +121,7 @@ if "usuario" not in st.session_state:
         user = cursor.fetchone()
 
         if user:
-            if bcrypt.checkpw(senha.encode(), user[3]):
+            if gerar_hash(senha) == user[3]:
                 st.session_state.usuario = {
                     "id": user[0],
                     "nome": user[1],
@@ -167,7 +174,6 @@ if menu == "Inteligência NCM":
     produto = st.text_area("Descreva tecnicamente o produto")
 
     if st.button("Analisar"):
-        # Simulação de IA
         ncm = "0000.00.00"
         risco = "Moderado"
 
@@ -196,16 +202,20 @@ if menu == "Histórico":
     SELECT produto, ncm_sugerida, risco, data_hora
     FROM analises
     WHERE empresa_id=?
+    ORDER BY data_hora DESC
     """, (usuario["empresa_id"],))
 
     dados = cursor.fetchall()
 
-    for row in dados:
-        st.write("Produto:", row[0])
-        st.write("NCM:", row[1])
-        st.write("Risco:", row[2])
-        st.write("Data:", row[3])
-        st.divider()
+    if not dados:
+        st.info("Nenhuma análise registrada.")
+    else:
+        for row in dados:
+            st.write("Produto:", row[0])
+            st.write("NCM:", row[1])
+            st.write("Risco:", row[2])
+            st.write("Data:", row[3])
+            st.divider()
 
 # ==============================
 # GESTÃO DE USUÁRIOS
@@ -226,8 +236,7 @@ if menu == "Gestão de Usuários":
         ])
 
         if st.button("Criar Usuário"):
-            senha_hash = bcrypt.hashpw(
-                senha.encode(), bcrypt.gensalt())
+            senha_hash = gerar_hash(senha)
             try:
                 cursor.execute("""
                 INSERT INTO usuarios (nome, email, senha, perfil, empresa_id, status)
@@ -260,8 +269,11 @@ if menu == "Auditoria":
 
     logs = cursor.fetchall()
 
-    for log in logs:
-        st.write(log[0], "-", log[1])
+    if not logs:
+        st.info("Nenhum registro encontrado.")
+    else:
+        for log in logs:
+            st.write(log[0], "-", log[1])
 
 # ==============================
 # SAIR
