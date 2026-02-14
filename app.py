@@ -55,7 +55,7 @@ if not st.session_state.auth:
         st.markdown(f"""
             <div class='welcome-container'>
                 <p class='status-tag'>Inteligência Aduaneira de Elite</p>
-                <h1 class='hero-title'>TRADEMIND<br><span style='color:#2563EB'>DUTY CLEAR</span></h1>
+                <h1 class='hero-title'>TRADEMIND<br><span style='color:#2563EB'/span></h1>
                 <p class='hero-subtitle'>
                     Sistema avançado de análise de viabilidade e blindagem jurídica para operações internacionais. 
                     Nossa tecnologia processa dados referenciais para mitigar riscos de classificação fiscal 
@@ -63,7 +63,7 @@ if not st.session_state.auth:
                 </p>
                 <br>
                 <div style='border-left: 4px solid #E2E8F0; padding-left: 20px;'>
-                    <p><b>Sobre o Projeto:</b> O Duty Clear atua no pré-embarque, transformando 
+                    <p><b>Sobre o Projeto:</b> O TradeMind atua no pré-embarque, transformando 
                     complexidade tributária em previsibilidade financeira.</p>
                 </div>
             </div>
