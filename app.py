@@ -106,11 +106,13 @@ else:
         st.markdown("""
             <div class='data-card'>
                 <h3>Visão Estratégica</h3>
-                <p>O Duty Clear nasceu da necessidade de precisão no comércio exterior. Operamos com o rigor técnico 
-                necessário para garantir que valores referenciais e classificações fiscais estejam alinhados 
-                com as melhores práticas de compliance.</p>
-                <p>Nossa plataforma integra tecnologia de ponta para fornecer ao Despachante Aduaneiro e ao 
-                Importador uma ferramenta robusta de tomada de decisão.</p>
+                <p>A TradeMind nasceu para elevar o padrão de inteligência aplicada ao comércio exterior. Atuamos onde a precisão técnica deixa de ser diferencial e passa a ser requisito: classificação fiscal, análise de valores referenciais e conformidade regulatória conduzidas com rigor, método e responsabilidade.
+
+Mais do que uma plataforma, somos um hub estratégico de dados e compliance. Integramos tecnologia avançada, inteligência analítica e expertise normativa para transformar informações complexas em decisões seguras e fundamentadas.
+
+Nossa solução foi desenvolvida para atender Despachantes Aduaneiros, Importadores e profissionais de Comex que operam em alto nível e não podem correr riscos fiscais ou operacionais.
+
+Na TradeMind, cada dado é tratado como ativo estratégico — porque no comércio exterior, margem e conformidade caminham juntas.</p>
             </div>
         """, unsafe_allow_html=True)
 
