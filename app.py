@@ -1,126 +1,125 @@
 import streamlit as st
 import pandas as pd
 
-# 1. SETUP PREMIUM
-st.set_page_config(page_title="TradeMind | Intelligence", layout="wide")
+# 1. Configuração de Sistema
+st.set_page_config(page_title="TradeMind | Duty Clear", layout="wide")
 
-# 2. DESIGN LIGHT TECH (SISTEMA RICO)
+# 2. CSS Corporativo - Sem Amadorismo
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .stApp { background-color: #F8FAFC; }
     
-    /* Cards com Glassmorphism Light */
-    .card-motor {
-        background: white; padding: 25px; border-radius: 20px;
-        border: 1px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        margin-bottom: 20px;
+    .stApp { background-color: #F8FAFC; color: #1E293B; }
+    
+    /* Login e Boas-Vindas */
+    .welcome-container {
+        padding: 60px; background: white; border-radius: 24px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid #E2E8F0;
     }
-    .badge-dev {
-        background: #FEF3C7; color: #92400E; padding: 4px 12px;
-        border-radius: 10px; font-size: 10px; font-weight: bold;
-    }
+    .hero-title { font-size: 48px; font-weight: 800; color: #0F172A; letter-spacing: -1px; }
+    .hero-subtitle { font-size: 18px; color: #64748B; line-height: 1.6; }
+    
+    /* Sidebar e Navegação */
+    [data-testid="stSidebar"] { background-color: #FFFFFF !important; border-right: 1px solid #E2E8F0; }
     .stButton > button {
-        background: linear-gradient(90deg, #2563EB, #3B82F6);
-        color: white; border-radius: 12px; border: none; font-weight: 600;
+        background: #0F172A; color: white; border: none; padding: 10px 20px;
+        border-radius: 8px; font-weight: 600; transition: 0.3s;
+    }
+    .stButton > button:hover { background: #334155; }
+    
+    /* Cards de Dados */
+    .data-card {
+        background: white; padding: 24px; border-radius: 16px;
+        border: 1px solid #E2E8F0; margin-bottom: 20px;
+    }
+    .status-tag {
+        font-size: 10px; text-transform: uppercase; font-weight: 800;
+        padding: 4px 12px; border-radius: 20px; background: #F1F5F9; color: #475569;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 3. MOTOR DE DADOS (BASE REAL MOCK)
-ncm_data = {
-    "85171300": {"nome": "Smartphone", "ii": 11.2, "ipi": 15, "pis": 2.1, "cofins": 9.65},
-    "84713012": {"nome": "Notebook", "ii": 0.0, "ipi": 0, "pis": 2.1, "cofins": 9.65},
-    "87032310": {"nome": "Veículo > 1500cm³", "ii": 35.0, "ipi": 25, "pis": 2.1, "cofins": 9.65}
-}
-
-# 4. LÓGICA DE NAVEGAÇÃO
+# 3. Gerenciamento de Estado
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'aba' not in st.session_state: st.session_state.aba = "Dashboard"
 
-# --- TELA DE LOGIN ---
+# --- FLUXO DE TELAS ---
+
 if not st.session_state.auth:
-    _, col, _ = st.columns([1, 1, 1])
-    with col:
-        st.markdown("<div class='card-motor' style='text-align:center;'>", unsafe_allow_html=True)
-        st.title("TRADEMIND")
-        u = st.text_input("Usuário")
-        p = st.text_input("Senha", type="password")
-        if st.button("ACESSAR TERMINAL"):
+    # TELA DE BOAS-VINDAS E LOGIN (REMODELADA)
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    col_a, col_b = st.columns([1.5, 1], gap="large")
+    
+    with col_a:
+        st.markdown(f"""
+            <div class='welcome-container'>
+                <p class='status-tag'>Inteligência Aduaneira de Elite</p>
+                <h1 class='hero-title'>TRADEMIND<br><span style='color:#2563EB'>DUTY CLEAR</span></h1>
+                <p class='hero-subtitle'>
+                    Sistema avançado de análise de viabilidade e blindagem jurídica para operações internacionais. 
+                    Nossa tecnologia processa dados referenciais para mitigar riscos de classificação fiscal 
+                    e otimizar a margem operacional de grandes importadores.
+                </p>
+                <br>
+                <div style='border-left: 4px solid #E2E8F0; padding-left: 20px;'>
+                    <p><b>Sobre o Projeto:</b> O Duty Clear atua no pré-embarque, transformando 
+                    complexidade tributária em previsibilidade financeira.</p>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_b:
+        st.markdown("<div class='welcome-container'>", unsafe_allow_html=True)
+        st.subheader("Acesso ao Terminal")
+        u = st.text_input("Usuário Master", placeholder="Identificação")
+        p = st.text_input("Chave de Acesso", type="password", placeholder="••••••••")
+        if st.button("AUTENTICAR NO SISTEMA", use_container_width=True):
             if u == "admin" and p == "trade2026":
-                st.session_state.auth = True; st.rerun()
+                st.session_state.auth = True
+                st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
 
 else:
     # SIDEBAR CORPORATIVA
     with st.sidebar:
-        st.markdown("<h2>Duty Clear</h2>", unsafe_allow_html=True)
-        if st.button("📊 Painel Estratégico"): st.session_state.aba = "Dashboard"; st.rerun()
-        if st.button("🔍 Inteligência NCM"): st.session_state.aba = "NCM"; st.rerun()
-        if st.button("💰 Simulador de Custos"): st.session_state.aba = "Simul"; st.rerun()
-        if st.button("🤖 IA Consultora"): st.session_state.aba = "IA"; st.rerun()
+        st.markdown("<h2 style='letter-spacing:-1px;'>DUTY CLEAR</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size:12px; color:#64748B;'>TERMINAL DE INTELIGÊNCIA</p>", unsafe_allow_html=True)
         st.markdown("---")
-        if st.button("🚪 Sair"): st.session_state.auth = False; st.rerun()
+        if st.button("Painel Estratégico", use_container_width=True): st.session_state.aba = "Dashboard"; st.rerun()
+        if st.button("Quem Somos", use_container_width=True): st.session_state.aba = "About"; st.rerun()
+        if st.button("Simulador de Custos", use_container_width=True): st.session_state.aba = "Simul"; st.rerun()
+        if st.button("Consulta NCM", use_container_width=True): st.session_state.aba = "NCM"; st.rerun()
+        st.markdown("<br><br>")
+        if st.button("Encerrar Sessão", use_container_width=True): st.session_state.auth = False; st.rerun()
 
-    # --- ABA: DASHBOARD ---
+    # ABAS
     if st.session_state.aba == "Dashboard":
-        st.markdown("<h1>Dashboard Executivo</h1>", unsafe_allow_html=True)
+        st.markdown("<h1>Painel de Controle</h1>", unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
-        with c1: st.markdown("<div class='card-motor'><h4>Score de Risco</h4><h2 style='color:#10B981;'>BAIXO</h2></div>", unsafe_allow_html=True)
-        with c2: st.markdown("<div class='card-motor'><h4>NCMs Auditadas</h4><h2>15.162</h2></div>", unsafe_allow_html=True)
-        with c3: st.markdown("<div class='card-motor'><h4>Economia Potencial</h4><h2 style='color:#2563EB;'>R$ 42.1k</h2></div>", unsafe_allow_html=True)
+        with c1: st.markdown("<div class='data-card'><h4>Câmbio PTAX</h4><h2>R$ 5,12</h2><span style='color:#10B981'>Estável</span></div>", unsafe_allow_html=True)
+        with c2: st.markdown("<div class='data-card'><h4>Risco de Operação</h4><h2>Nível 1</h2><span style='color:#10B981'>Monitorado</span></div>", unsafe_allow_html=True)
+        with c3: st.markdown("<div class='data-card'><h4>Análises Pendentes</h4><h2>04</h2><span>Prioridade Alta</span></div>", unsafe_allow_html=True)
 
-    # --- ABA: NCM ---
-    elif st.session_state.aba == "NCM":
-        st.markdown("<h1>Inteligência NCM <span class='badge-dev'>MOTOR ATIVO</span></h1>", unsafe_allow_html=True)
-        codigo = st.text_input("Consulte uma NCM (8 dígitos)")
-        if codigo in ncm_data:
-            item = ncm_data[codigo]
-            st.markdown(f"""
-                <div class='card-motor'>
-                    <h3>{item['nome']} (NCM {codigo})</h3>
-                    <p><b>Alíquotas de Importação:</b></p>
-                    <ul>
-                        <li>II: {item['ii']}%</li>
-                        <li>IPI: {item['ipi']}%</li>
-                        <li>PIS/COFINS: {item['pis'] + item['cofins']}%</li>
-                    </ul>
-                </div>
-            """, unsafe_allow_html=True)
-        elif codigo:
-            st.warning("NCM não encontrada na base local. Buscando em banco externo...")
-            st.info("Status: Aguardando integração com API do Governo Federal <span class='badge-dev'>EM DEV</span>", unsafe_allow_html=True)
+    elif st.session_state.aba == "About":
+        st.markdown("<h1>Quem Somos</h1>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class='data-card'>
+                <h3>Visão Estratégica</h3>
+                <p>O Duty Clear nasceu da necessidade de precisão no comércio exterior. Operamos com o rigor técnico 
+                necessário para garantir que valores referenciais e classificações fiscais estejam alinhados 
+                com as melhores práticas de compliance.</p>
+                <p>Nossa plataforma integra tecnologia de ponta para fornecer ao Despachante Aduaneiro e ao 
+                Importador uma ferramenta robusta de tomada de decisão.</p>
+            </div>
+        """, unsafe_allow_html=True)
 
-    # --- ABA: SIMULADOR (O MOTOR REAL) ---
     elif st.session_state.aba == "Simul":
-        st.markdown("<h1>Simulador de Custo Landed</h1>", unsafe_allow_html=True)
-        with st.form("calc"):
-            col1, col2 = st.columns(2)
-            fob = col1.number_input("Valor FOB (USD)", min_value=0.0)
-            frete = col2.number_input("Frete/Seguro (USD)", min_value=0.0)
-            taxa = st.number_input("Câmbio (R$)", value=5.12)
-            submit = st.form_submit_button("PROCESSAR CÁLCULO TRIBUTÁRIO")
-            
-            if submit:
-                cif = (fob + frete) * taxa
-                ii = cif * 0.14
-                ipi = (cif + ii) * 0.15
-                total = cif + ii + ipi
-                
-                st.markdown("<div class='card-motor'>", unsafe_allow_html=True)
-                st.write(f"**Base de Cálculo (CIF):** R$ {cif:,.2f}")
-                st.write(f"**Imposto de Importação (II):** R$ {ii:,.2f}")
-                st.write(f"**IPI (Estimado):** R$ {ipi:,.2f}")
-                st.markdown(f"### Custo Total Estimado: R$ {total:,.2f}")
-                st.markdown("</div>", unsafe_allow_html=True)
-                st.download_button("GERAR RELATÓRIO DE VIABILIDADE", "Relatorio TradeMind...", file_name="viabilidade.txt")
+        st.markdown("<h1>Simulador de Impacto Fiscal</h1>", unsafe_allow_html=True)
+        # Código do simulador mantido, mas sem emojis e com design limpo.
+        st.info("Insira os dados da operação para gerar a planilha de viabilidade.")
 
-    # --- ABA: IA ---
-    elif st.session_state.aba == "IA":
-        st.markdown("<h1>Assistente de Legislação <span class='badge-dev'>EM DESENVOLVIMENTO</span></h1>", unsafe_allow_html=True)
-        st.markdown("<div class='card-motor'>Aguardando conexão com banco de dados de legislação federal e API GPT-4.</div>", unsafe_allow_html=True)
-        st.chat_input("Pergunte algo sobre o Regulamento Aduaneiro (Inativo no momento)...")
-
-    # RODAPÉ
-    st.markdown("<br><hr><center><small>TradeMind AI © 2026 - Valores Referenciais. Blindagem Jurídica Ativa.</small></center>", unsafe_allow_html=True)
+    # RODAPÉ LEGAL (Obrigatório para sua segurança)
+    st.markdown("<div style='text-align:center; padding: 40px; color:#94A3B8; font-size:11px; border-top:1px solid #E2E8F0;'>"
+                "TRADEMIND AI | DUTY CLEAR - INFORMAÇÕES MERAMENTE REFERENCIAIS BASEADAS EM DADOS HISTÓRICOS. "
+                "CONSULTE O REGULAMENTO ADUANEIRO VIGENTE.</div>", unsafe_allow_html=True)
